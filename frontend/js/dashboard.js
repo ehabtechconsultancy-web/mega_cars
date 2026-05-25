@@ -15,11 +15,11 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('collapsed');
 }
 
-function showSection(sectionId) {
+function showSection(sectionId, e) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
     document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
     document.getElementById(sectionId)?.classList.remove('hidden');
-    event.target.closest('.menu-item')?.classList.add('active');
+    (e?.target ?? e)?.closest?.('.menu-item')?.classList.add('active');
 
     const titles = {
         'dashboard':    t('dash.section.dashboard'),

@@ -16,23 +16,26 @@
                 <span data-i18n="admin.roleLabel">لوحة المسؤول</span>
             </div>
             <nav class="admin-menu">
-                <a href="#" class="admin-menu-item active" onclick="showAdminSection('dashboard')">
-                    <i class="fas fa-chart-line"></i><span data-i18n="admin.menu.dashboard">لوحة التحكم</span>
+                <a href="#" class="admin-menu-item active" onclick="showAdminSection('dashboard', event)">
+                    <i class="fas fa-chart-line"></i><span data-i18n="admin.menu.dashboard">Dashboard</span>
                 </a>
-                <a href="#" class="admin-menu-item" onclick="showAdminSection('cars')">
-                    <i class="fas fa-car"></i><span data-i18n="admin.menu.cars">إدارة السيارات</span>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('cars', event)">
+                    <i class="fas fa-car"></i><span data-i18n="admin.menu.cars">Manage Cars</span>
                 </a>
-                <a href="#" class="admin-menu-item" onclick="showAdminSection('users')">
-                    <i class="fas fa-users"></i><span data-i18n="admin.menu.users">إدارة المستخدمين</span>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('users', event)">
+                    <i class="fas fa-users"></i><span data-i18n="admin.menu.users">Manage Users</span>
                 </a>
-                <a href="#" class="admin-menu-item" onclick="showAdminSection('sales')">
-                    <i class="fas fa-shopping-cart"></i><span data-i18n="admin.menu.sales">تقارير المبيعات</span>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('sales', event)">
+                    <i class="fas fa-shopping-cart"></i><span data-i18n="admin.menu.sales">Sales Reports</span>
                 </a>
-                <a href="#" class="admin-menu-item" onclick="showAdminSection('settings')">
-                    <i class="fas fa-cog"></i><span data-i18n="admin.menu.settings">إعدادات النظام</span>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('settings', event)">
+                    <i class="fas fa-cog"></i><span data-i18n="admin.menu.settings">Settings</span>
+                </a>
+                <a href="../index.html" class="admin-menu-item">
+                    <i class="fas fa-home"></i><span data-i18n="nav.home">Home</span>
                 </a>
                 <a href="#" class="admin-menu-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i><span data-i18n="admin.menu.logout">تسجيل الخروج</span>
+                    <i class="fas fa-sign-out-alt"></i><span data-i18n="admin.menu.logout">Logout</span>
                 </a>
             </nav>
             <div class="sidebar-footer">

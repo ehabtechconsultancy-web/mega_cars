@@ -14,11 +14,11 @@ function ensureAdminAuth() {
 
 let currentAdmin = ensureAdminAuth();
 
-function showAdminSection(sectionId) {
+function showAdminSection(sectionId, e) {
     document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
     document.querySelectorAll('.admin-menu-item').forEach(i => i.classList.remove('active'));
     document.getElementById(sectionId)?.classList.remove('hidden');
-    event.target.closest('.admin-menu-item')?.classList.add('active');
+    (e?.target ?? e)?.closest?.('.admin-menu-item')?.classList.add('active');
 
     const titles = {
         'dashboard': t('admin.section.dashboard'),

@@ -16,23 +16,26 @@
                 <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             </div>
             <nav class="sidebar-menu">
-                <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                <a href="#" class="menu-item active" onclick="showSection('dashboard', event)">
                     <i class="fas fa-th-large"></i><span data-i18n="dash.menu.dashboard">Dashboard</span>
                 </a>
-                <a href="#" class="menu-item" onclick="showSection('cars')">
+                <a href="#" class="menu-item" onclick="showSection('cars', event)">
                     <i class="fas fa-warehouse"></i><span data-i18n="dash.menu.cars">Inventory</span>
                 </a>
-                <a href="#" class="menu-item" onclick="showSection('my-sales')">
+                <a href="#" class="menu-item" onclick="showSection('my-sales', event)">
                     <i class="fas fa-shopping-cart"></i><span data-i18n="dash.menu.purchases">Sales Records</span>
                 </a>
-                <a href="#" class="menu-item" onclick="showSection('installments')">
+                <a href="#" class="menu-item" onclick="showSection('installments', event)">
                     <i class="fas fa-credit-card"></i><span data-i18n="dash.menu.installments">Installments</span>
                 </a>
-                <a href="#" class="menu-item" onclick="showSection('sell-car')">
+                <a href="#" class="menu-item" onclick="showSection('sell-car', event)">
                     <i class="fas fa-plus-circle"></i><span data-i18n="dash.menu.sellCar">Add Car</span>
                 </a>
-                <a href="#" class="menu-item" onclick="showSection('settings')">
+                <a href="#" class="menu-item" onclick="showSection('settings', event)">
                     <i class="fas fa-cog"></i><span data-i18n="dash.menu.settings">Settings</span>
+                </a>
+                <a href="../index.html" class="menu-item">
+                    <i class="fas fa-home"></i><span data-i18n="nav.home">Home</span>
                 </a>
                 <a href="#" class="menu-item" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i><span data-i18n="dash.menu.logout">Logout</span>
