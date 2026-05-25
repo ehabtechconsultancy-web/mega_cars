@@ -1,6 +1,6 @@
 // Runs immediately — prevents direction flash before DOM builds
 (function () {
-  const lang = localStorage.getItem('lang') || 'ar';
+  const lang = localStorage.getItem('lang') || 'en';
   document.documentElement.lang = lang;
   document.documentElement.dir = (lang === 'ar' || lang === 'ku') ? 'rtl' : 'ltr';
 })();
@@ -327,7 +327,7 @@ const translations = {
   document.head.appendChild(style);
 })();
 
-function getLang() { return localStorage.getItem('lang') || 'ar'; }
+function getLang() { return localStorage.getItem('lang') || 'en'; }
 function setLang(lang) { localStorage.setItem('lang', lang); applyLang(lang); }
 
 function t(key) {
