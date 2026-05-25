@@ -1,195 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - Mega Car</title>
+    <title>لوحة التحكم - Mega Cars</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../js/i18n.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h3>Mega Car</h3>
-                <button class="toggle-btn" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <h3 data-i18n="dash.brand">ميجا كارز</h3>
+                <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             </div>
-            
             <nav class="sidebar-menu">
                 <a href="#" class="menu-item active" onclick="showSection('dashboard')">
-                    <i class="fas fa-th-large"></i>
-                    <span>Dashboard</span>
+                    <i class="fas fa-th-large"></i><span data-i18n="dash.menu.dashboard">الرئيسية</span>
                 </a>
                 <a href="#" class="menu-item" onclick="showSection('cars')">
-                    <i class="fas fa-car"></i>
-                    <span>Browse Cars</span>
+                    <i class="fas fa-car"></i><span data-i18n="dash.menu.cars">المخزون</span>
                 </a>
                 <a href="#" class="menu-item" onclick="showSection('my-sales')">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>My Purchases</span>
+                    <i class="fas fa-shopping-cart"></i><span data-i18n="dash.menu.purchases">سجلات المبيعات</span>
                 </a>
                 <a href="#" class="menu-item" onclick="showSection('installments')">
-                    <i class="fas fa-credit-card"></i>
-                    <span>Installments</span>
+                    <i class="fas fa-credit-card"></i><span data-i18n="dash.menu.installments">الأقساط</span>
                 </a>
                 <a href="#" class="menu-item" onclick="showSection('sell-car')">
-                    <i class="fas fa-tag"></i>
-                    <span>Sell Your Car</span>
+                    <i class="fas fa-plus-circle"></i><span data-i18n="dash.menu.sellCar">إضافة سيارة</span>
                 </a>
                 <a href="#" class="menu-item" onclick="showSection('settings')">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
+                    <i class="fas fa-cog"></i><span data-i18n="dash.menu.settings">الإعدادات</span>
                 </a>
                 <a href="#" class="menu-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
+                    <i class="fas fa-sign-out-alt"></i><span data-i18n="dash.menu.logout">تسجيل الخروج</span>
                 </a>
             </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-avatar"><i class="fas fa-user"></i></div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name" id="sidebarUserName">User</div>
+                    <div class="sidebar-user-role" data-i18n="dash.userRole">عضو</div>
+                </div>
+            </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="top-bar">
-                <h2 id="pageTitle">Dashboard</h2>
+                <h2 id="pageTitle" data-i18n="dash.section.dashboard">الرئيسية</h2>
                 <div class="user-menu">
-                    <span id="userName">User</span>
-                    <button class="user-avatar" onclick="toggleUserMenu()">
-                        <i class="fas fa-user"></i>
-                    </button>
+                    <button id="langToggleBtn" class="lang-toggle-btn" onclick="toggleLang()">EN</button>
+                    <span class="user-name-badge" id="userName">User</span>
+                    <button class="user-avatar" onclick="toggleUserMenu()"><i class="fas fa-user"></i></button>
                 </div>
             </header>
 
-            <!-- Dashboard Section -->
             <section id="dashboard" class="content-section">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h3 id="welcomeGreeting">مرحباً</h3>
+                        <p data-i18n="dash.welcomeSub">إليك ملخص حسابك اليوم</p>
+                    </div>
+                    <div class="welcome-date">
+                        <strong id="welcomeDay"></strong>
+                        <span id="welcomeDate"></span>
+                    </div>
+                </div>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>Total Purchases</h3>
-                        <p id="totalPurchases">0</p>
+                        <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="stat-info">
+                            <h3 data-i18n="dash.stat.totalPurchases">إجمالي المشتريات</h3>
+                            <p id="totalPurchases">0</p>
+                        </div>
                     </div>
                     <div class="stat-card">
-                        <h3>Active Installments</h3>
-                        <p id="activeInstallments">0</p>
+                        <div class="stat-icon green"><i class="fas fa-credit-card"></i></div>
+                        <div class="stat-info">
+                            <h3 data-i18n="dash.stat.activeInstallments">الأقساط النشطة</h3>
+                            <p id="activeInstallments">0</p>
+                        </div>
                     </div>
                     <div class="stat-card">
-                        <h3>Cars Sold</h3>
-                        <p id="carsSold">0</p>
+                        <div class="stat-icon amber"><i class="fas fa-warehouse"></i></div>
+                        <div class="stat-info">
+                            <h3 data-i18n="dash.stat.carsSold">سيارات في المخزون</h3>
+                            <p id="carsSold">0</p>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Browse Cars Section -->
             <section id="cars" class="content-section hidden">
+                <h4 class="section-title"><i class="fas fa-car"></i> <span data-i18n="dash.section.cars">تصفح السيارات</span></h4>
                 <div class="filters">
-                    <input type="text" id="searchBrand" placeholder="Search by brand...">
+                    <input type="text" id="searchBrand" data-i18n-placeholder="cars.searchBrand" placeholder="ابحث عن الماركة...">
                     <select id="carStatus">
-                        <option value="">All Status</option>
-                        <option value="available">Available</option>
+                        <option value="" data-i18n="cars.allStatus">جميع الحالات</option>
+                        <option value="available" data-i18n="cars.available">متاح</option>
                     </select>
-                    <button class="btn btn-primary" onclick="loadCars()">Search</button>
+                    <button class="btn btn-primary" onclick="loadCars()" data-i18n="cars.search">بحث</button>
                 </div>
                 <div id="carsList" class="cars-grid"></div>
             </section>
 
-            <!-- My Sales Section -->
             <section id="my-sales" class="content-section hidden">
+                <h4 class="section-title"><i class="fas fa-shopping-cart"></i> <span data-i18n="dash.section.purchases">مشترياتي</span></h4>
                 <div id="salesList" class="sales-list"></div>
             </section>
 
-            <!-- Installments Section -->
             <section id="installments" class="content-section hidden">
+                <h4 class="section-title"><i class="fas fa-credit-card"></i> <span data-i18n="dash.section.installments">الأقساط</span></h4>
                 <div id="installmentsList" class="installments-list"></div>
             </section>
 
-            <!-- Sell Car Section -->
             <section id="sell-car" class="content-section hidden">
+                <h4 class="section-title"><i class="fas fa-plus-circle"></i> <span data-i18n="dash.section.sellCar">إضافة سيارة جديدة</span></h4>
                 <form id="sellCarForm" class="form-grid">
                     <div class="form-group">
-                        <label>Brand</label>
-                        <input type="text" required>
+                        <label data-i18n="sell.brand">الماركة</label>
+                        <input type="text" name="brand" required>
                     </div>
                     <div class="form-group">
-                        <label>Model</label>
-                        <input type="text" required>
+                        <label data-i18n="sell.model">الموديل</label>
+                        <input type="text" name="model" required>
                     </div>
                     <div class="form-group">
-                        <label>Year</label>
-                        <input type="number" required>
+                        <label data-i18n="sell.year">السنة</label>
+                        <input type="number" name="year" required>
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
-                        <input type="number" required>
+                        <label data-i18n="sell.price">السعر</label>
+                        <input type="number" name="price" required>
                     </div>
                     <div class="form-group">
-                        <label>Mileage</label>
-                        <input type="number" required>
+                        <label data-i18n="sell.mileage">المسافة</label>
+                        <input type="number" name="mileage" required>
                     </div>
                     <div class="form-group">
-                        <label>Color</label>
-                        <input type="text" required>
+                        <label data-i18n="sell.color">اللون</label>
+                        <input type="text" name="color">
                     </div>
                     <div class="form-group full-width">
-                        <label>Description</label>
-                        <textarea rows="4"></textarea>
+                        <label data-i18n="sell.description">الوصف</label>
+                        <textarea name="description" rows="4"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">List Car for Sale</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="sell.submit">إضافة إلى المخزون</button>
                 </form>
             </section>
 
-            <!-- Settings Section -->
             <section id="settings" class="content-section hidden">
                 <div class="settings-grid">
                     <div class="settings-card">
-                        <h3>Appearance Settings</h3>
+                        <h3><i class="fas fa-palette"></i> <span data-i18n="settings.appearance">إعدادات المظهر</span></h3>
                         <div class="form-group">
-                            <label>Font Size</label>
-                            <input type="range" id="fontSizeSlider" min="12" max="18" value="14" onchange="updateFontSize()">
-                            <span id="fontSizeValue">14px</span>
+                            <label data-i18n="settings.fontSize">حجم الخط</label>
+                            <div class="range-row">
+                                <input type="range" id="fontSizeSlider" min="12" max="18" value="14" onchange="updateFontSize()">
+                                <span id="fontSizeValue">14px</span>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label>Theme</label>
+                            <label data-i18n="settings.theme">السمة</label>
                             <select id="themeSelect" onchange="updateTheme()">
-                                <option value="light">Light</option>
-                                <option value="dark">Dark</option>
+                                <option value="light" data-i18n="settings.themeLight">فاتح</option>
+                                <option value="dark" data-i18n="settings.themeDark">داكن</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Language</label>
-                            <select id="languageSelect" onchange="updateLanguage()">
-                                <option value="en">English</option>
-                                <option value="ar">العربية</option>
+                            <label data-i18n="settings.language">اللغة</label>
+                            <select id="languageSelect">
+                                <option value="ar" data-i18n="settings.langAr">العربية</option>
+                                <option value="ku" data-i18n="settings.langKu">کوردی</option>
+                                <option value="en" data-i18n="settings.langEn">English</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                        <button class="btn btn-primary" onclick="saveSettings()" data-i18n="settings.saveSettings">حفظ الإعدادات</button>
                     </div>
-                    
                     <div class="settings-card">
-                        <h3>Profile Settings</h3>
+                        <h3><i class="fas fa-user-circle"></i> <span data-i18n="settings.profile">الملف الشخصي</span></h3>
                         <div class="form-group">
-                            <label>Name</label>
+                            <label data-i18n="settings.name">الاسم</label>
                             <input type="text" id="profileName">
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
+                            <label data-i18n="settings.email">البريد الإلكتروني</label>
                             <input type="email" id="profileEmail" disabled>
                         </div>
                         <div class="form-group">
-                            <label>Phone</label>
+                            <label data-i18n="settings.phone">الهاتف</label>
                             <input type="tel" id="profilePhone">
                         </div>
                         <div class="form-group">
-                            <label>Address</label>
+                            <label data-i18n="settings.address">العنوان</label>
                             <input type="text" id="profileAddress">
                         </div>
-                        <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+                        <button class="btn btn-primary" onclick="saveProfile()" data-i18n="settings.saveProfile">حفظ الملف الشخصي</button>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
+    <script src="../js/auth.js"></script>
     <script src="../js/dashboard.js"></script>
 </body>
 </html>

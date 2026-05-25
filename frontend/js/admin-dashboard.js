@@ -1,61 +1,80 @@
 const API_BASE_URL = 'http://localhost:3000/api';
 
-// Check authorization (admin only)
 function ensureAdminAuth() {
     const user = localStorage.getItem('user');
-    if (!user) {
-        window.location.href = 'login.html';
-        return null;
-    }
-    
+    if (!user) { window.location.href = 'login.html'; return null; }
     const userData = JSON.parse(user);
     if (userData.role !== 'admin') {
-        alert('Admin access required');
+        alert(t('alert.adminRequired'));
         window.location.href = '../index.html';
         return null;
     }
-    
     return userData;
 }
 
 let currentAdmin = ensureAdminAuth();
 
-// Show admin section
 function showAdminSection(sectionId) {
-    // Hide all sections
-    document.querySelectorAll('.admin-section').forEach(section => {
-        section.classList.add('hidden');
-    });
-    
-    // Remove active class from menu items
-    document.querySelectorAll('.admin-menu-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Show selected section
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.admin-menu-item').forEach(i => i.classList.remove('active'));
     document.getElementById(sectionId)?.classList.remove('hidden');
-    
-    // Add active class to clicked menu item
     event.target.closest('.admin-menu-item')?.classList.add('active');
-    
-    // Update page title
+
     const titles = {
-        'dashboard': 'Dashboard',
-        'cars': 'Manage Cars',
-        'users': 'Manage Users',
-        'sales': 'Sales Reports',
-        'settings': 'System Settings'
+        'dashboard': t('admin.section.dashboard'),
+        'cars': t('admin.section.cars'),
+        'users': t('admin.section.users'),
+        'sales': t('admin.section.sales'),
+        'settings': t('admin.section.settings')
     };
-    document.getElementById('adminPageTitle').textContent = titles[sectionId] || 'Dashboard';
-    
-    // Load section data
+    document.getElementById('adminPageTitle').textContent = titles[sectionId] || t('admin.section.dashboard');
+
     if (sectionId === 'dashboard') loadAdminDashboard();
     if (sectionId === 'cars') loadAdminCars();
     if (sectionId === 'users') loadAdminUsers();
     if (sectionId === 'sales') loadAdminSalesReports();
 }
 
-// Load admin dashboard
+function updateAdminWelcome() {
+    const name = currentAdmin?.name || 'Admin';
+    const el = document.getElementById('adminSidebarName');
+    if (el) el.textContent = name;
+
+    const greeting = t('dash.greeting');
+    const greetEl = document.getElementById('adminWelcomeGreeting');
+    if (greetEl) greetEl.textContent = `${greeting}، ${name}`;
+
+    const now = new Date();
+    const dayNames = {
+        ar: ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'],
+        ku: ['یەکشەممە','دووشەممە','سێشەممە','چوارشەممە','پێنجشەممە','هەینی','شەممە'],
+        en: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    };
+    const lang = getLang();
+    const days = dayNames[lang] || dayNames.en;
+    const dayEl = document.getElementById('adminWelcomeDay');
+    const dateEl = document.getElementById('adminWelcomeDate');
+    if (dayEl) dayEl.textContent = days[now.getDay()];
+    if (dateEl) dateEl.textContent = now.toLocaleDateString(
+        lang === 'ar' ? 'ar-IQ' : lang === 'ku' ? 'ku' : 'en-US',
+        { year: 'numeric', month: 'long', day: 'numeric' }
+    );
+}
+
+function statusBadge(status) {
+    const labels = {
+        available: t('dyn.available'),
+        sold: t('dyn.status.completed'),
+        pending: t('dyn.status.pending'),
+        completed: t('dyn.status.completed'),
+        active: t('dyn.status.active'),
+        cancelled: t('dyn.status.cancelled'),
+        admin: 'Admin', staff: 'Staff', user: t('dash.userRole')
+    };
+    const label = labels[status] || status;
+    return `<span class="status-badge ${status}">${label}</span>`;
+}
+
 async function loadAdminDashboard() {
     try {
         const token = localStorage.getItem('token');
@@ -63,27 +82,16 @@ async function loadAdminDashboard() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const stats = await response.json();
-        
-        document.getElementById('statsUsers').textContent = stats.totalUsers;
-        document.getElementById('statsCars').textContent = stats.totalCars;
-        document.getElementById('statsSales').textContent = stats.totalSales;
-        document.getElementById('statsRevenue').textContent = '$' + stats.totalRevenue.toLocaleString();
-    } catch (error) {
-        console.error('Error loading dashboard:', error);
-    }
+        document.getElementById('statsUsers').textContent = stats.totalUsers ?? 0;
+        document.getElementById('statsCars').textContent = stats.totalCars ?? 0;
+        document.getElementById('statsSales').textContent = stats.totalSales ?? 0;
+        document.getElementById('statsRevenue').textContent = '$' + (stats.totalRevenue ?? 0).toLocaleString();
+    } catch (error) { console.error('Error loading dashboard:', error); }
 }
 
-// Show add car form
-function showAddCarForm() {
-    document.getElementById('addCarForm').classList.remove('hidden');
-}
+function showAddCarForm() { document.getElementById('addCarForm').classList.remove('hidden'); }
+function hideAddCarForm() { document.getElementById('addCarForm').classList.add('hidden'); }
 
-// Hide add car form
-function hideAddCarForm() {
-    document.getElementById('addCarForm').classList.add('hidden');
-}
-
-// Load admin cars
 async function loadAdminCars() {
     try {
         const token = localStorage.getItem('token');
@@ -91,43 +99,41 @@ async function loadAdminCars() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const cars = await response.json();
-        
-        const carsList = document.getElementById('carsList');
-        carsList.innerHTML = `
+        if (!Array.isArray(cars) || cars.length === 0) {
+            document.getElementById('carsList').innerHTML = `<p style="color:var(--text-muted);padding:20px">${t('admin.cars.title')}: –</p>`;
+            return;
+        }
+        document.getElementById('carsList').innerHTML = `
             <table>
-                <thead>
+                <thead><tr>
+                    <th>${t('admin.cars.brand')}</th>
+                    <th>${t('admin.cars.model')}</th>
+                    <th>${t('admin.cars.year')}</th>
+                    <th>${t('admin.cars.price')}</th>
+                    <th>${t('admin.cars.mileage')}</th>
+                    <th>${t('admin.cars.fuel')}</th>
+                    <th>${t('admin.cars.status')}</th>
+                    <th>${t('admin.cars.actions')}</th>
+                </tr></thead>
+                <tbody>${cars.map(car => `
                     <tr>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Year</th>
-                        <th>Price</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${cars.map(car => `
-                        <tr>
-                            <td>${car.brand}</td>
-                            <td>${car.model}</td>
-                            <td>${car.year}</td>
-                            <td>$${car.price.toLocaleString()}</td>
-                            <td>${car.status}</td>
-                            <td>
-                                <button class="btn btn-secondary btn-small">Edit</button>
-                                <button class="btn btn-danger btn-small" onclick="deleteCar('${car._id}')">Delete</button>
-                            </td>
-                        </tr>
-                    `).join('')}
+                        <td><strong>${car.brand}</strong></td>
+                        <td>${car.model}</td>
+                        <td>${car.year}</td>
+                        <td><strong>$${car.price.toLocaleString()}</strong></td>
+                        <td>${car.mileage?.toLocaleString() || '–'} km</td>
+                        <td>${car.fuel || '–'}</td>
+                        <td>${statusBadge(car.status)}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-small">${t('admin.cars.edit')}</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteCar('${car._id}')">${t('admin.cars.delete')}</button>
+                        </td>
+                    </tr>`).join('')}
                 </tbody>
-            </table>
-        `;
-    } catch (error) {
-        console.error('Error loading cars:', error);
-    }
+            </table>`;
+    } catch (error) { console.error('Error loading cars:', error); }
 }
 
-// Load admin users
 async function loadAdminUsers() {
     try {
         const token = localStorage.getItem('token');
@@ -135,43 +141,37 @@ async function loadAdminUsers() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const users = await response.json();
-        
-        const usersList = document.getElementById('usersList');
-        usersList.innerHTML = `
+        if (!Array.isArray(users) || users.length === 0) {
+            document.getElementById('usersList').innerHTML = `<p style="color:var(--text-muted);padding:20px">–</p>`;
+            return;
+        }
+        document.getElementById('usersList').innerHTML = `
             <table>
-                <thead>
+                <thead><tr>
+                    <th>${t('admin.users.name')}</th>
+                    <th>${t('admin.users.email')}</th>
+                    <th>${t('admin.users.phone')}</th>
+                    <th>${t('admin.users.role')}</th>
+                    <th>${t('admin.users.city')}</th>
+                    <th>${t('admin.users.actions')}</th>
+                </tr></thead>
+                <tbody>${users.map(user => `
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Role</th>
-                        <th>City</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${users.map(user => `
-                        <tr>
-                            <td>${user.name}</td>
-                            <td>${user.email}</td>
-                            <td>${user.phone}</td>
-                            <td>${user.role}</td>
-                            <td>${user.city || '-'}</td>
-                            <td>
-                                <button class="btn btn-secondary btn-small">Edit</button>
-                                <button class="btn btn-danger btn-small" onclick="deleteUser('${user._id}')">Delete</button>
-                            </td>
-                        </tr>
-                    `).join('')}
+                        <td><strong>${user.name}</strong></td>
+                        <td>${user.email}</td>
+                        <td>${user.phone || '–'}</td>
+                        <td>${statusBadge(user.role)}</td>
+                        <td>${user.city || '–'}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-small">${t('admin.users.edit')}</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteUser('${user._id}')">${t('admin.users.delete')}</button>
+                        </td>
+                    </tr>`).join('')}
                 </tbody>
-            </table>
-        `;
-    } catch (error) {
-        console.error('Error loading users:', error);
-    }
+            </table>`;
+    } catch (error) { console.error('Error loading users:', error); }
 }
 
-// Load admin sales reports
 async function loadAdminSalesReports() {
     try {
         const token = localStorage.getItem('token');
@@ -179,115 +179,93 @@ async function loadAdminSalesReports() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         const sales = await response.json();
-        
-        const salesReport = document.getElementById('salesReport');
-        salesReport.innerHTML = `
+        if (!Array.isArray(sales) || sales.length === 0) {
+            document.getElementById('salesReport').innerHTML = `<p style="color:var(--text-muted);padding:20px">–</p>`;
+            return;
+        }
+        document.getElementById('salesReport').innerHTML = `
             <table>
-                <thead>
+                <thead><tr>
+                    <th>${t('admin.sales.car')}</th>
+                    <th>${t('admin.sales.buyer')}</th>
+                    <th>${t('admin.sales.price')}</th>
+                    <th>${t('admin.sales.date')}</th>
+                    <th>${t('admin.sales.payment')}</th>
+                    <th>${t('admin.sales.status')}</th>
+                    <th>${t('admin.sales.actions')}</th>
+                </tr></thead>
+                <tbody>${sales.map(sale => `
                     <tr>
-                        <th>Car</th>
-                        <th>Buyer</th>
-                        <th>Price</th>
-                        <th>Date</th>
-                        <th>Payment Method</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${sales.map(sale => `
-                        <tr>
-                            <td>${sale.car.brand} ${sale.car.model}</td>
-                            <td>${sale.buyer.name}</td>
-                            <td>$${sale.salePrice.toLocaleString()}</td>
-                            <td>${new Date(sale.saleDate).toLocaleDateString()}</td>
-                            <td>${sale.paymentMethod}</td>
-                            <td>${sale.status}</td>
-                            <td>
-                                <button class="btn btn-secondary btn-small">View</button>
-                            </td>
-                        </tr>
-                    `).join('')}
+                        <td><strong>${sale.car?.brand || ''} ${sale.car?.model || ''}</strong></td>
+                        <td>${sale.buyer?.name || '–'}</td>
+                        <td><strong>$${sale.salePrice?.toLocaleString()}</strong></td>
+                        <td>${new Date(sale.saleDate).toLocaleDateString()}</td>
+                        <td>${sale.paymentMethod || '–'}</td>
+                        <td>${statusBadge(sale.status)}</td>
+                        <td><button class="btn btn-secondary btn-small">${t('admin.sales.view')}</button></td>
+                    </tr>`).join('')}
                 </tbody>
-            </table>
-        `;
-    } catch (error) {
-        console.error('Error loading sales reports:', error);
-    }
+            </table>`;
+    } catch (error) { console.error('Error loading sales reports:', error); }
 }
 
-// Delete car
 async function deleteCar(carId) {
-    if (!confirm('Are you sure you want to delete this car?')) return;
-    
+    if (!confirm(t('alert.deleteCarConfirm'))) return;
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE_URL}/cars/${carId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        
-        if (response.ok) {
-            alert('Car deleted successfully');
-            loadAdminCars();
-        }
-    } catch (error) {
-        console.error('Error deleting car:', error);
-        alert('Failed to delete car');
-    }
+        if (response.ok) { alert(t('alert.carDeleted')); loadAdminCars(); }
+        else alert(t('alert.carDeleteFailed'));
+    } catch (error) { console.error('Error deleting car:', error); alert(t('alert.carDeleteFailed')); }
 }
 
-// Delete user
 async function deleteUser(userId) {
-    if (!confirm('Are you sure you want to delete this user?')) return;
-    
+    if (!confirm(t('alert.deleteUserConfirm'))) return;
     try {
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
-        
-        if (response.ok) {
-            alert('User deleted successfully');
-            loadAdminUsers();
-        }
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        alert('Failed to delete user');
-    }
+        if (response.ok) { alert(t('alert.userDeleted')); loadAdminUsers(); }
+        else alert(t('alert.userDeleteFailed'));
+    } catch (error) { console.error('Error deleting user:', error); alert(t('alert.userDeleteFailed')); }
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    updateAdminWelcome();
     loadAdminDashboard();
-    
-    // Add car form submission
+
     document.getElementById('addCarForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-        
+        const data = Object.fromEntries(new FormData(e.target));
+        data.year = parseInt(data.year);
+        data.price = parseFloat(data.price);
+        data.mileage = parseInt(data.mileage);
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`${API_BASE_URL}/cars`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(data)
             });
-            
             if (response.ok) {
-                alert('Car added successfully');
+                alert(t('alert.carAdded'));
+                e.target.reset();
                 hideAddCarForm();
                 loadAdminCars();
+            } else {
+                const err = await response.json();
+                alert(err.message || t('alert.carAddFailed'));
             }
-        } catch (error) {
-            console.error('Error adding car:', error);
-            alert('Failed to add car');
-        }
+        } catch (error) { console.error('Error adding car:', error); alert(t('alert.carAddFailed')); }
+    });
+
+    document.getElementById('systemSettingsForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert(t('alert.settingsSaved'));
     });
 });

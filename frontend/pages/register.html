@@ -1,58 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Mega Car</title>
+    <title>إنشاء حساب - Mega Cars</title>
     <link rel="stylesheet" href="../css/auth.css">
+    <script src="../js/i18n.js"></script>
 </head>
 <body class="auth-body">
+    <button id="langToggleBtn" class="lang-toggle-btn lang-toggle-floating" onclick="toggleLang()">EN</button>
+
     <div class="auth-container">
         <div class="auth-box auth-box-large">
             <div class="auth-logo">
-                <img src="../images/logo.jpeg" alt="Mega Car Logo">
-                <h1>Mega Car</h1>
+                <img src="../images/logo.png" alt="Mega Cars Logo">
+                <h1>Mega Cars</h1>
             </div>
-            
+
+            <h2 data-i18n="register.title">إنشاء حساب جديد</h2>
+
             <form id="registerForm">
                 <div class="form-group">
-                    <label for="name">Full Name</label>
+                    <label for="name" data-i18n="register.name">الاسم الكامل</label>
                     <input type="text" id="name" name="name" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email" data-i18n="register.email">البريد الإلكتروني</label>
                     <input type="email" id="email" name="email" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="phone">Phone</label>
+                    <label for="phone" data-i18n="register.phone">رقم الهاتف</label>
                     <input type="tel" id="phone" name="phone" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password" data-i18n="register.password">كلمة المرور</label>
                     <input type="password" id="password" name="password" required>
                 </div>
-                
                 <div class="form-group">
-                    <label for="address">Address</label>
+                    <label for="address" data-i18n="register.address">العنوان</label>
                     <input type="text" id="address" name="address">
                 </div>
-                
                 <div class="form-group">
-                    <label for="city">City</label>
+                    <label for="city" data-i18n="register.city">المدينة</label>
                     <input type="text" id="city" name="city" placeholder="Dohok">
                 </div>
-                
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-primary" data-i18n="register.submit">إنشاء الحساب</button>
             </form>
-            
-            <p class="auth-link">Already have an account? <a href="login.html">Login here</a></p>
-            <a href="../index.html" class="back-link">← Back to Home</a>
+
+            <p class="auth-link">
+                <span data-i18n="register.hasAccount">لديك حساب بالفعل؟</span>
+                <a href="login.html" data-i18n="register.login">سجّل دخولك هنا</a>
+            </p>
+            <a href="../index.html" class="back-link" data-i18n="register.backHome">← العودة للرئيسية</a>
         </div>
     </div>
-    
+
     <script src="../js/auth.js"></script>
 </body>
 </html>
