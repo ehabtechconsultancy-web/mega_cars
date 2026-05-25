@@ -1,6 +1,6 @@
 const express = require('express');
 const Car = require('../models/Car');
-const { auth, adminOnly } = require('../middleware/auth');
+const { adminOnly } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -50,7 +50,7 @@ router.post('/', adminOnly, async (req, res) => {
 // Update car (admin only)
 router.put('/:id', adminOnly, async (req, res) => {
   try {
-    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!car) return res.status(404).json({ message: 'Car not found' });
     res.json(car);
   } catch (error) {

@@ -2,7 +2,7 @@ const express = require('express');
 const Sale = require('../models/Sale');
 const Installment = require('../models/Installment');
 const Car = require('../models/Car');
-const { auth, adminOnly } = require('../middleware/auth');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -112,6 +112,37 @@ router.post('/installment/create', auth, async (req, res) => {
     
     await installmentPlan.save();
     res.status(201).json(installmentPlan);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// Pay an installment
+router.put('/installment/:planId/pay/:installmentNumber', auth, async (req, res) => {
+  try {
+    const plan = await Installment.findById(req.params.planId);
+    if (!plan) return res.status(404).json({ message: 'Installment plan not found' });
+
+    if (plan.buyer.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+
+    const installment = plan.installments.find(
+      i => i.installmentNumber === parseInt(req.params.installmentNumber)
+    );
+    if (!installment) return res.status(404).json({ message: 'Installment not found' });
+    if (installment.paid) return res.status(400).json({ message: 'Installment already paid' });
+
+    installment.paid = true;
+    installment.paidDate = new Date();
+    installment.paymentMethod = req.body.paymentMethod || 'cash';
+    installment.notes = req.body.notes;
+
+    const allPaid = plan.installments.every(i => i.paid);
+    if (allPaid) plan.status = 'completed';
+
+    await plan.save();
+    res.json(plan);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
