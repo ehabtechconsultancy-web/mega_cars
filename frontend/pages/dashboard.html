@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Mega Car</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Mega Car</h3>
+                <button class="toggle-btn" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('cars')">
+                    <i class="fas fa-car"></i>
+                    <span>Browse Cars</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('my-sales')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>My Purchases</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('installments')">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Installments</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('sell-car')">
+                    <i class="fas fa-tag"></i>
+                    <span>Sell Your Car</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="user-menu">
+                    <span id="userName">User</span>
+                    <button class="user-avatar" onclick="toggleUserMenu()">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Purchases</h3>
+                        <p id="totalPurchases">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Installments</h3>
+                        <p id="activeInstallments">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Cars Sold</h3>
+                        <p id="carsSold">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Browse Cars Section -->
+            <section id="cars" class="content-section hidden">
+                <div class="filters">
+                    <input type="text" id="searchBrand" placeholder="Search by brand...">
+                    <select id="carStatus">
+                        <option value="">All Status</option>
+                        <option value="available">Available</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadCars()">Search</button>
+                </div>
+                <div id="carsList" class="cars-grid"></div>
+            </section>
+
+            <!-- My Sales Section -->
+            <section id="my-sales" class="content-section hidden">
+                <div id="salesList" class="sales-list"></div>
+            </section>
+
+            <!-- Installments Section -->
+            <section id="installments" class="content-section hidden">
+                <div id="installmentsList" class="installments-list"></div>
+            </section>
+
+            <!-- Sell Car Section -->
+            <section id="sell-car" class="content-section hidden">
+                <form id="sellCarForm" class="form-grid">
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mileage</label>
+                        <input type="number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Color</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Description</label>
+                        <textarea rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">List Car for Sale</button>
+                </form>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section hidden">
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>Appearance Settings</h3>
+                        <div class="form-group">
+                            <label>Font Size</label>
+                            <input type="range" id="fontSizeSlider" min="12" max="18" value="14" onchange="updateFontSize()">
+                            <span id="fontSizeValue">14px</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Theme</label>
+                            <select id="themeSelect" onchange="updateTheme()">
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Language</label>
+                            <select id="languageSelect" onchange="updateLanguage()">
+                                <option value="en">English</option>
+                                <option value="ar">العربية</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                    </div>
+                    
+                    <div class="settings-card">
+                        <h3>Profile Settings</h3>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="profileName">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="profileEmail" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="profilePhone">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <input type="text" id="profileAddress">
+                        </div>
+                        <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

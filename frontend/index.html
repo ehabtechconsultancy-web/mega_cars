@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Car - Car Dealership Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="images/logo.jpeg" alt="Mega Car Logo" class="logo">
+                <span class="brand-name">Mega Car</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#cars">Our Cars</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li id="loginBtn" class="nav-btn"><a href="pages/login.html">Login</a></li>
+                <li id="logoutBtn" class="nav-btn hidden"><button onclick="logout()">Logout</button></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Welcome to Mega Car</h1>
+            <p>Your Trusted Car Dealership in Dohok, Iraq</p>
+            <button class="btn btn-primary" onclick="scrollToSection('cars')">Browse Our Cars</button>
+        </div>
+        <div class="hero-image">
+            <img src="images/hero-car.jpg" alt="Featured Car" onerror="this.style.display='none'">
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Mega Car</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p><strong>Mega Car</strong> is your trusted partner in finding the perfect vehicle. Since our establishment, we have been committed to providing high-quality cars and exceptional customer service to the people of Dohok and surrounding areas.</p>
+                    <p>We offer a wide range of vehicles, from economy cars to luxury models, all carefully inspected and maintained to ensure your satisfaction.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-car"></i>
+                            <h3>Wide Selection</h3>
+                            <p>Choose from hundreds of quality vehicles</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Trusted Service</h3>
+                            <p>Professional and transparent dealings</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-credit-card"></i>
+                            <h3>Flexible Financing</h3>
+                            <p>Installment plans available</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-tools"></i>
+                            <h3>After-Sales Support</h3>
+                            <p>Complete maintenance and support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cars Section -->
+    <section id="cars" class="cars">
+        <div class="container">
+            <h2>Our Inventory</h2>
+            <div class="filters">
+                <input type="text" id="brandFilter" placeholder="Search by brand...">
+                <select id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="sold">Sold</option>
+                </select>
+                <input type="number" id="minPrice" placeholder="Min Price">
+                <input type="number" id="maxPrice" placeholder="Max Price">
+                <button class="btn btn-secondary" onclick="filterCars()">Search</button>
+            </div>
+            <div id="carsList" class="cars-grid">
+                <!-- Cars will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Location</h3>
+                    <p>Dohok, Iraq</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h3>Phone</h3>
+                    <p>+964 (0) XXX XXXX XXX</p>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email</h3>
+                    <p>info@megacar.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Mega Car Dealership. All rights reserved.</p>
+            <p>Dohok, Iraq</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

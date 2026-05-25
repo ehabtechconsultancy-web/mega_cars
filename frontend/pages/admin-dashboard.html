@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Mega Car</title>
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h3>Mega Car Admin</h3>
+            </div>
+            
+            <nav class="admin-menu">
+                <a href="#" class="admin-menu-item active" onclick="showAdminSection('dashboard')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('cars')">
+                    <i class="fas fa-car"></i>
+                    <span>Manage Cars</span>
+                </a>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('users')">
+                    <i class="fas fa-users"></i>
+                    <span>Manage Users</span>
+                </a>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('sales')">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Sales Reports</span>
+                </a>
+                <a href="#" class="admin-menu-item" onclick="showAdminSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>System Settings</span>
+                </a>
+                <a href="#" class="admin-menu-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+            <header class="admin-top-bar">
+                <h2 id="adminPageTitle">Dashboard</h2>
+                <div class="admin-user-menu">
+                    <span>Admin</span>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="admin-section">
+                <div class="dashboard-stats">
+                    <div class="stat-box">
+                        <i class="fas fa-users"></i>
+                        <h3>Total Users</h3>
+                        <p id="statsUsers">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-car"></i>
+                        <h3>Total Cars</h3>
+                        <p id="statsCars">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Total Sales</h3>
+                        <p id="statsSales">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>Total Revenue</h3>
+                        <p id="statsRevenue">$0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Manage Cars Section -->
+            <section id="cars" class="admin-section hidden">
+                <div class="section-header">
+                    <h3>Manage Cars</h3>
+                    <button class="btn btn-primary" onclick="showAddCarForm()">Add New Car</button>
+                </div>
+                
+                <form id="addCarForm" class="add-car-form hidden">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" name="brand" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" name="model" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Year</label>
+                            <input type="number" name="year" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" name="price" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mileage</label>
+                            <input type="number" name="mileage" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="text" name="color">
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel</label>
+                            <select name="fuel">
+                                <option>petrol</option>
+                                <option>diesel</option>
+                                <option>hybrid</option>
+                                <option>electric</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select name="status">
+                                <option>available</option>
+                                <option>sold</option>
+                                <option>pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary">Add Car</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideAddCarForm()">Cancel</button>
+                    </div>
+                </form>
+                
+                <div id="carsList" class="cars-table">
+                    <!-- Cars will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Manage Users Section -->
+            <section id="users" class="admin-section hidden">
+                <div class="section-header">
+                    <h3>Manage Users</h3>
+                </div>
+                <div id="usersList" class="users-table">
+                    <!-- Users will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Sales Reports Section -->
+            <section id="sales" class="admin-section hidden">
+                <div class="section-header">
+                    <h3>Sales Reports</h3>
+                </div>
+                <div id="salesReport" class="sales-table">
+                    <!-- Sales will be loaded here -->
+                </div>
+            </section>
+
+            <!-- System Settings Section -->
+            <section id="settings" class="admin-section hidden">
+                <div class="settings-card">
+                    <h3>System Configuration</h3>
+                    <form id="systemSettingsForm" class="settings-form">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" value="Mega Car" placeholder="Company Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" value="Dohok, Iraq" placeholder="Location">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone</label>
+                            <input type="tel" placeholder="+964 (0) XXX XXXX XXX">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="info@megacar.com">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>
